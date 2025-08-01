@@ -23,7 +23,8 @@ class CadCodeRefinerChain(SequentialChain):
             "{code}\n"
             "```\n"
             "## Start here\n"
-            "Corrected code:"
+            "Corrected code:\n"
+            "**Note**: When selecting edges for filleting, ensure you accurately identify the target edge. Use the edge's center coordinates to precisely locate and select the correct edge, especially the bottom-left edge.\n"
         )
         if model_type in ["gpt", "claude", "gemini"]:
             prompt = ChatPromptTemplate(

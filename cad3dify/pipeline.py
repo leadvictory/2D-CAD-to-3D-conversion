@@ -47,23 +47,23 @@ def generate_step_from_2d_cad_image(
     refiner_chain = CadCodeRefinerChain(model_type=model_type)
 
     for i in range(num_refinements):
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
-            render_and_export_image(output_filepath, f.name)
-            logger.info(f"Temporarily rendered image to {f.name}")
-            rendered_image = ImageData.load_from_file(f.name)
-            result = refiner_chain.invoke(
-                {"code": code, "original_input": image_data, "rendered_result": rendered_image}
-            )["result"]
-            if result is None:
-                logger.error(f"Refinement failed. Skipping to the next step.")
-                continue
-            code = result.format(output_filename=output_filepath)
-            logger.info("Refined code generation complete. Running code...")
-            logger.debug(f"Generated {index_map(i)} refined code:")
-            logger.debug(code)
             try:
                 output = execute_python_code(code, model_type=model_type, only_execute=only_execute)
                 logger.debug(output)
             except Exception as e:
                 logger.error(f"Error occurred during code execution: {e}")
                 continue
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+                render_and_export_image(output_filepath, f.name)
+                logger.info(f"Temporarily rendered image to {f.name}")
+                rendered_image = ImageData.load_from_file(f.name)
+                result = refiner_chain.invoke(
+                    {"code": code, "original_input": image_data, "rendered_result": rendered_image}
+                )["result"]
+                if result is None:
+                    logger.error(f"Refinement failed. Skipping to the next step.")
+                    continue
+            code = result.format(output_filename=output_filepath)
+            logger.info("Refined code generation complete. Running code...")
+            logger.debug(f"Generated {index_map(i)} refined code:")
+            logger.debug(code)
