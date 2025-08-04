@@ -36,15 +36,25 @@ def generate_step_from_2d_cad_image(
     image_data = ImageData.load_from_file(image_filepath)
     chain = CadCodeGeneratorChain(model_type=model_type)
 
-    result = chain.invoke(image_data)["result"]
-    code = result.format(output_filename=output_filepath)
-    logger.info("1st code generation complete. Running code...")
-    logger.debug("Generated 1st code:")
-    logger.debug(code)
-    output = execute_python_code(code, model_type=model_type, only_execute=only_execute)
-    logger.debug(output)
+    max_retries = 3
+    for i in range(max_retries):
+        result = chain.invoke(image_data)["result"]
+        if result:
+            logger.debug(f"Generated code: {result}")
+            code = result.format(output_filename=output_filepath)
+            logger.info("1st code generation complete. Running code...")
+            logger.debug("Generated 1st code:")
+            logger.debug(code)
+            output = execute_python_code(code, model_type=model_type, only_execute=only_execute)
+            logger.debug(output)
 
-    refiner_chain = CadCodeRefinerChain(model_type=model_type)
+            refiner_chain = CadCodeRefinerChain(model_type=model_type)
+            break
+        else:
+            logger.error(f"Code generation failed. Retrying ({i+1}/{max_retries})")
+    else:
+        logger.error("Code generation failed after multiple retries. Skipping to the next step.")
+        return
 
     for i in range(num_refinements):
             try:
