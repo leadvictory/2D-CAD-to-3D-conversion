@@ -27,12 +27,27 @@ if uploaded_file is not None:
     ext = os.path.splitext(uploaded_file.name)[1]
     st.image(image, caption="Uploaded Image", use_column_width=True)
     st.write("Image size: ", image.size)
-    with open(f"temp.{ext}", "wb") as f:
+
+    temp_image_path = f"temp{ext}"
+    with open(temp_image_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
+
+    output_path = "output.step"
+
+    # Remove old STEP file if it exists
+    if os.path.exists(output_path):
+        os.remove(output_path)
+
     with st.spinner("Processing image..."):
-        generate_step_from_2d_cad_image(
-            f"temp.{ext}", "output.step", model_type=args.model_type
-        )
+        generate_step_from_2d_cad_image(temp_image_path, output_path, model_type=args.model_type)
+
     st.success("3D CAD data has been successfully generated.")
-else:
-    st.write("No image uploaded.")
+
+    # Download button
+    try:
+        with open(output_path, "rb") as f:
+            st.download_button("Download STEP File", f, file_name="output.step", mime="application/octet-stream")
+    except FileNotFoundError:
+        st.error("The output.step file was not found. Please try again.")
+    else:
+        st.write("No image uploaded.")
