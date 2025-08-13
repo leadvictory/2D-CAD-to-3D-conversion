@@ -31,7 +31,12 @@ if uploaded_file is not None:
     temp_image_path = f"temp{ext}"
     with open(temp_image_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
-
+    import glob
+    for svg_file in glob.glob("*.svg"):
+        try:
+            os.remove(svg_file)
+        except Exception as e:
+            st.warning(f"Could not delete {svg_file}: {e}")
     output_path = "output.step"
 
     # Remove old STEP file if it exists

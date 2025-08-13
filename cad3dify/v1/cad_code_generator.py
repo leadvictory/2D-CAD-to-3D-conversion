@@ -275,7 +275,7 @@ class CadCodeGeneratorChain(SequentialChain):
         gen_cad_code_prompt = (
             "You are a highly skilled CAD designer. Please write code that converts the attached 2D CAD image into a 3D CAD model using a Python CAD library called 'cadquery.'\n"
             "## Points to Note\n"
-            "* read all geometry value and its relationship from 2D CAD image and need to use all of them to generate 3D CAD model"
+            "* must read all geometry values and its relationship from uploaded 2D CAD image and check if all of them used to generate 3D CAD model at final code"
             "* Please use the `from cadquery import exporters` statement and then the `exporters.export` function to output the created 3D model as a STEP file.\n"
             "* It is crucial to use the template string `{{output_filename}}` when specifying the output file path. The 'output_filename' variable includes the file extension and should be used in the `exporters.export` function.\n"
             "* Surround the code with a markdown code block.\n"

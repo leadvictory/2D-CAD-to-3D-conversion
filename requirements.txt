@@ -1,21 +1,21 @@
-cadquery==2.5.2
-cadquery-ocp==7.7.2.2b2
-casadi==3.6.4  # Latest stable, 3.7.1 is experimental
-colorama==0.4.6
-exceptiongroup==1.2.1
-ezdxf==1.4.3
-fonttools==4.52.4
-iniconfig==2.0.0
-multimethod==1.12
-nlopt==2.7.1
+# Main dependencies
+python-dotenv==1.0.1
+langchain==0.3.0
+langchain-openai==0.2.0
+svglib==1.5.1
+langchain-experimental==0.3.1
+cadquery==2.4.0
+rlpycairo==0.3.0
+loguru==0.7.2
+langchainhub==0.1.15
+streamlit==1.37.1
 numpy==1.26.4
-packaging==24.0
-path==16.7.1
-pillow==10.3.0
-pluggy==1.5.0
-Pygments==2.19.2
-pyparsing==3.2.1
-pytest==8.2.1
-tomli==2.0.1
-typing_extensions==4.12.1
-typish==1.9.3
+langchain-anthropic==0.3.0
+langchain-google-genai==2.0.7
+
+# Optional extras (include if you want vertexai support)
+langchain-google-vertexai==2.0.1
+
+# Development dependencies
+black==24.4.2
+isort==5.13.2
